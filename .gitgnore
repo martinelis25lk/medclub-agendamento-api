@@ -1,9 +1,8 @@
-# Python
+# Python / Pycache
 __pycache__/
 *.py[cod]
 *$py.class
 venv/
-ENV/
 env/
 
 # Django
