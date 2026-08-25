@@ -31,6 +31,13 @@ class Agenda(models.Model):
         if self.horario_inicio >= self.horario_fim:
             raise ValidationError("O horário de início deve ser anterior ao horário de término.")
 
+    # 👇 O save agora está corretamente dentro da classe Agenda
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        # Ao salvar a agenda, chama o serviço para criar os horários 
+        from .services import gerar_horarios_para_agenda
+        gerar_horarios_para_agenda(self)
+
     def __str__(self):
         return f"{self.especialista.nome} - {self.get_dia_semana_display()} ({self.horario_inicio} às {self.horario_fim})"
 
