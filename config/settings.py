@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'accounts',
     'scheduling',
+    'drf_yasg',
+
 ]
 
 MIDDLEWARE = [
