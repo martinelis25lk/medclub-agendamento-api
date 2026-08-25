@@ -1,3 +1,6 @@
+import os
+
+
 """
 Django settings for config project.
 
@@ -85,7 +88,7 @@ DATABASES = {
         'NAME': 'medclub_db',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
-        'HOST': 'localhost',
+        'HOST': os.getenv('POSTGRES_HOST', 'localhost'), # Usa 'db' no Docker e 'localhost' fora dele
         'PORT': '5432',
     }
 }
