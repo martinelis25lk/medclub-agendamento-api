@@ -1,10 +1,11 @@
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.conf import settings
 
 class Especialista(models.Model):
     nome = models.CharField(max_length=255)
     especialidade = models.CharField(max_length=255)
-    registro_conselho = models.CharField(max_length=50, unique=True)  # ex: CRM/CRO
+    registro_conselho = models.CharField(max_length=50, unique=True)
 
     def __str__(self):
         return f"{self.nome} - {self.especialidade}"
@@ -31,10 +32,9 @@ class Agenda(models.Model):
         if self.horario_inicio >= self.horario_fim:
             raise ValidationError("O horário de início deve ser anterior ao horário de término.")
 
-    # 👇 O save agora está corretamente dentro da classe Agenda
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        # Ao salvar a agenda, chama o serviço para criar os horários 
+        
         from .services import gerar_horarios_para_agenda
         gerar_horarios_para_agenda(self)
 
@@ -64,8 +64,8 @@ class HorarioAtendimento(models.Model):
 
 
 class Agendamento(models.Model):
-    cliente_nome = models.CharField(max_length=255)
-    cliente_email = models.EmailField()
+   
+    paciente = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='agendamentos')
     horario_atendimento = models.OneToOneField(HorarioAtendimento, on_delete=models.CASCADE, related_name='agendamento')
     criado_em = models.DateTimeField(auto_now_add=True)
 
@@ -74,11 +74,10 @@ class Agendamento(models.Model):
             raise ValidationError("Este horário já está reservado.")
 
     def save(self, *args, **kwargs):
-        # Garante a regra de negócio: ao agendar, muda o status do slot para reservado
         self.full_clean()
         self.horario_atendimento.status = 'reservado'
         self.horario_atendimento.save()
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"Agendamento de {self.cliente_nome} para {self.horario_atendimento}"
+        return f"Agendamento de {self.paciente.username} para {self.horario_atendimento}"
