@@ -11,6 +11,15 @@ class AgendaSerializer(serializers.ModelSerializer):
         model = Agenda
         fields = '__all__'
 
+    def validate(self, data):
+        horario_inicio = data.get('horario_inicio', getattr(self.instance, 'horario_inicio', None))
+        horario_fim = data.get('horario_fim', getattr(self.instance, 'horario_fim', None))
+        if horario_inicio and horario_fim and horario_inicio >= horario_fim:
+            raise serializers.ValidationError(
+                "O horário de início deve ser anterior ao horário de término."
+            )
+        return data
+
 class HorarioAtendimentoSerializer(serializers.ModelSerializer):
     especialista_nome = serializers.ReadOnlyField(source='especialista.nome')
     
