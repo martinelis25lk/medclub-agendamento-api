@@ -22,6 +22,8 @@ class AgendamentoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Agendamento
         fields = '__all__'
+        read_only_fields = ['paciente']  # pra evitar spoofing,  paciente vem sempre do usuário logado
+
     
     def validate_horario_atendimento(self, value):
         if value.status == 'reservado':
