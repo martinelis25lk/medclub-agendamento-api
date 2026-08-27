@@ -40,4 +40,17 @@ async function entrar() {
       </div>
       <div>
         <label>Senha</label>
-        <input v-model="password" type="password" class="input" required
+        <input v-model="password" type="password" class="input" required />
+      </div>
+      <p v-if="erro" class="error-text">{{ erro }}</p>
+      <button class="btn btn-primary" type="submit" :disabled="carregando">
+        {{ carregando ? 'Entrando...' : 'Entrar' }}
+      </button>
+    </form>
+
+    <p style="margin-top: 1.5rem; text-align:center; color: var(--color-muted);">
+      Não tem conta?
+      <router-link to="/registrar" style="color: var(--color-primary); font-weight:600;">Cadastre-se</router-link>
+    </p>
+  </div>
+</template>
