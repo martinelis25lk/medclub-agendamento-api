@@ -9,6 +9,12 @@ API RESTful desenvolvida em Django para gestão de especialistas, agendas e agen
 * **Autenticação JWT** (`djangorestframework-simplejwt`)
 * **Swagger** (`drf-yasg`) para documentação interativa
 
+## Pré-requisitos
+* Docker Desktop instalado e em execução
+* Node.js 18+ (para rodar o frontend)
+
+
+
 ##  Como Executar o Projeto
 
 1. Clone o repositório:
@@ -21,59 +27,52 @@ git clone https://github.com/martinelis25lk/medclub-agendamento-api.git
 docker-compose up -d --build
 
 
-3. Acesse o container da aplicação para rodar as migrações e criar o usuário administrador:
+3. Rode as migrações e crie o usuário administrador:
 
-docker exec -it medclub_web bash
-python manage.py migrate
-python manage.py createsuperuser
+docker exec -it medclub_web python manage.py migrate
+docker exec -it medclub_web python manage.py createsuperuser
 
 > ATENÇÃO O `createsuperuser` cria um usuário com acesso ao Django Admin, mas **não** define automaticamente o papel de negócio `interno`. Após criar, ajuste manualmente:
 > ```
-> python manage.py shell -c "from django.contrib.auth import get_user_model; U = get_user_model(); u = U.objects.get(username='SEU_USUARIO'); u.role = 'interno'; u.save()"
-> ```
-
-
+> docker exec -it medclub_web python manage.py shell -c "from django.contrib.auth import get_user_model; U = get_user_model(); u = U.objects.get(username='SEU_USUARIO'); u.role = 'interno'; u.save()"
+>
 ##  Documentação da API
 Com o servidor rodando, acesse a documentação visual e teste as rotas em:
-* **Swagger UI:** `http://localhost:8000/swagger/`
+* **Swagger UI:** http://localhost:8000/swagger/
 
 ## Autenticação e Regras de Negócio
-* **JWT com Roles:** O sistema distingue usuários `cliente` e `interno`. Rotas de gerenciamento (Especialistas e Agendas) exigem permissão de usuário interno.
+* **JWT com Roles:** O sistema distingue usuários cliente e interno. Rotas de gerenciamento (Especialistas e Agendas) exigem permissão de usuário interno.
 * **Geração Automática de Slots:** Ao cadastrar uma nova Agenda, o sistema calcula e distribui de forma equidistante os horários de atendimento.
-* **Testes Unitários:** As regras vitais (geração de slots e bloqueio de agendamento duplicado) estão 100% cobertas por testes automatizados (`python manage.py test`).
-
+* **Testes Unitários:** As regras vitais (geração de slots e bloqueio de agendamento duplicado) estão 100% cobertas por testes automatizados (python manage.py test).
 
 ## Rotas da API
 
 | Método | Rota | Acesso | Descrição |
 |---|---|---|---|
-| POST | `/api/auth/register/` | Público | Cadastro de cliente |
-| POST | `/api/auth/token/` | Público | Login (retorna JWT) |
-| POST | `/api/auth/token/refresh/` | Público | Renova o access token |
-| GET/POST | `/api/especialistas/` | Leitura pública / Escrita interno | Cadastro de especialistas |
-| GET/POST | `/api/agendas/` | Leitura pública / Escrita interno | Cadastro de agendas (gera horários automaticamente) |
-| GET | `/api/horarios/` | Público | Lista horários disponíveis (somente leitura) |
-| GET/POST | `/api/agendamentos/` | Autenticado | Lista (escopado ao usuário) e cria agendamentos |
-
+| POST | /api/auth/register/ | Público | Cadastro de cliente |
+| POST | /api/auth/token/ | Público | Login (retorna JWT) |
+| POST | /api/auth/token/refresh/ | Público | Renova o access token |
+| GET/POST | /api/especialistas/ | Leitura pública / Escrita interno | Cadastro de especialistas |
+| GET/POST | /api/agendas/ | Leitura pública / Escrita interno | Cadastro de agendas (gera horários automaticamente) |
+| GET | /api/horarios/ | Público | Lista horários disponíveis (somente leitura) |
+| GET/POST | /api/agendamentos/ | Autenticado | Lista (escopado ao usuário) e cria agendamentos |
 
 ## Convenção de Commits
 Este projeto segue [Conventional Commits](https://www.conventionalcommits.org/):
-`feat:` novas funcionalidades · `fix:` correções · `chore:` configuração/manutenção · `test:` testes · `ci:` integração contínua · `refactor:` melhorias sem mudança de comportamento
-
-
+feat: novas funcionalidades · fix: correções · chore: configuração/manutenção · test: testes · ci: integração contínua · refactor: melhorias sem mudança de comportamento
 
 ## Frontend (Vue)
 
-1. Entre na pasta do frontend:
+O backend (passos acima) precisa estar rodando em http://localhost:8000 para o frontend funcionar.
 
+Em um novo terminal, entre na pasta do frontend:
 cd medclub-frontend
 
 npm install
 
 npm run dev
 
-npm run dev
+Acesse http://localhost:5173
 
-2. Acesse `http://localhost:5173`
-
-3. Cadastre-se como cliente em `/registrar`, ou faça login se já tiver conta
+Cadastre-se como cliente em /registrar, ou faça login se já tiver conta
+```
