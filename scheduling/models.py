@@ -33,6 +33,7 @@ class Agenda(models.Model):
             raise ValidationError("O horário de início deve ser anterior ao horário de término.")
 
     def save(self, *args, **kwargs):
+        self.full_clean()
         super().save(*args, **kwargs)
         
         from .services import gerar_horarios_para_agenda
