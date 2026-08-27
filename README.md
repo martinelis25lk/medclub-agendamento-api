@@ -59,3 +59,21 @@ Com o servidor rodando, acesse a documentação visual e teste as rotas em:
 ## Convenção de Commits
 Este projeto segue [Conventional Commits](https://www.conventionalcommits.org/):
 `feat:` novas funcionalidades · `fix:` correções · `chore:` configuração/manutenção · `test:` testes · `ci:` integração contínua · `refactor:` melhorias sem mudança de comportamento
+
+
+
+## Frontend (Vue)
+
+1. Entre na pasta do frontend:
+
+cd medclub-frontend
+
+npm install
+
+npm run dev
+
+npm run dev
+
+2. Acesse `http://localhost:5173`
+
+3. Cadastre-se como cliente em `/registrar`, ou faça login se já tiver conta
