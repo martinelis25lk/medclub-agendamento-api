@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import api from '../services/api'
+import { setAuth } from '../services/auth'
 
 const router = useRouter()
 const username = ref('')
@@ -17,8 +18,7 @@ async function entrar() {
       username: username.value,
       password: password.value,
     })
-    localStorage.setItem('access_token', data.access)
-    localStorage.setItem('refresh_token', data.refresh)
+    setAuth(data.access, data.refresh)
     router.push('/especialistas')
   } catch (e) {
     erro.value = 'Usuário ou senha inválidos.'
@@ -40,17 +40,4 @@ async function entrar() {
       </div>
       <div>
         <label>Senha</label>
-        <input v-model="password" type="password" class="input" required />
-      </div>
-      <p v-if="erro" class="error-text">{{ erro }}</p>
-      <button class="btn btn-primary" type="submit" :disabled="carregando">
-        {{ carregando ? 'Entrando...' : 'Entrar' }}
-      </button>
-    </form>
-
-    <p style="margin-top: 1.5rem; text-align:center; color: var(--color-muted);">
-      Não tem conta?
-      <router-link to="/registrar" style="color: var(--color-primary); font-weight:600;">Cadastre-se</router-link>
-    </p>
-  </div>
-</template>
+        <input v-model="password" type="password" class="input" required

@@ -1,11 +1,11 @@
 <script setup>
 import { useRouter } from 'vue-router'
+import { isLoggedIn, clearAuth } from './services/auth'
+
 const router = useRouter()
-const isAuth = () => !!localStorage.getItem('access_token')
 
 function sair() {
-  localStorage.removeItem('access_token')
-  localStorage.removeItem('refresh_token')
+  clearAuth()
   router.push('/login')
 }
 </script>
@@ -16,7 +16,7 @@ function sair() {
       <strong style="font-family: var(--font-display); font-size: 1.25rem; color: var(--color-primary);">
         medclub<span style="color: var(--color-accent);">.</span>
       </strong>
-      <button v-if="isAuth()" class="btn btn-ghost" @click="sair">Sair</button>
+      <button v-if="isLoggedIn" class="btn btn-ghost" @click="sair">Sair</button>
     </div>
   </header>
   <router-view />
