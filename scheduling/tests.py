@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 from datetime import time, date, timedelta
 from django.contrib.auth import get_user_model
 from .models import Especialista, Agenda, HorarioAtendimento, Agendamento
+from .serializers import AgendamentoSerializer
 
 User = get_user_model()
 
@@ -68,3 +69,23 @@ class RegraDeNegocioTests(TestCase):
         agendamento2 = Agendamento(paciente=self.paciente, horario_atendimento=slot)
         with self.assertRaises(ValidationError):
             agendamento2.save()
+
+    def test_serializer_retorna_detalhes_do_horario(self):
+        agenda = Agenda.objects.create(
+            especialista=self.especialista,
+            dia_semana=0,
+            horario_inicio=time(11, 0),
+            horario_fim=time(11, 30),
+            vagas_totais_dia=1
+        )
+
+        slot = HorarioAtendimento.objects.filter(agenda=agenda).first()
+
+        agendamento = Agendamento(paciente=self.paciente, horario_atendimento=slot)
+        agendamento.save()
+
+        dados = AgendamentoSerializer(agendamento).data
+
+        self.assertIn('horario_atendimento_detalhes', dados)
+        self.assertEqual(dados['horario_atendimento_detalhes']['especialista_nome'], self.especialista.nome)
+        self.assertEqual(dados['horario_atendimento_detalhes']['status'], 'reservado')
