@@ -1,13 +1,14 @@
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import api from '../services/api'
 
 const props = defineProps({ id: String })
+const router = useRouter()
 
 const horarios = ref([])
 const carregando = ref(true)
 const agendando = ref(null)
-const mensagem = ref('')
 const erro = ref('')
 
 async function carregarHorarios() {
@@ -20,11 +21,9 @@ async function carregarHorarios() {
 async function agendar(horario) {
   agendando.value = horario.id
   erro.value = ''
-  mensagem.value = ''
   try {
     await api.post('/agendamentos/', { horario_atendimento: horario.id })
-    mensagem.value = 'Consulta agendada com sucesso!'
-    await carregarHorarios()
+    router.push(`/confirmacao/${horario.id}`)
   } catch (e) {
     erro.value = 'Este horário já não está mais disponível.'
   } finally {
@@ -37,7 +36,6 @@ onMounted(carregarHorarios)
 
 <template>
   <div class="container">
-    <!-- indicador de progresso -->
     <div style="display:flex; gap:0.5rem; align-items:center; margin-bottom:2rem; color: var(--color-muted); font-size:0.85rem;">
       <span class="badge">1. Especialista ✓</span>
       <span>—</span>
@@ -47,7 +45,6 @@ onMounted(carregarHorarios)
     </div>
 
     <h1>Horários disponíveis</h1>
-    <p v-if="mensagem" style="color: var(--color-primary); font-weight:600;">{{ mensagem }}</p>
     <p v-if="erro" class="error-text">{{ erro }}</p>
 
     <p v-if="carregando" style="color: var(--color-muted);">Carregando...</p>
