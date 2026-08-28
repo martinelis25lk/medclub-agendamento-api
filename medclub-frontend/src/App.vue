@@ -17,6 +17,7 @@ function sair() {
         medclub<span style="color: var(--color-accent);">.</span>
       </strong>
       <div v-if="isLoggedIn" style="display:flex; gap:0.75rem; align-items:center;">
+        <router-link to="/especialistas" class="btn btn-ghost">Especialistas</router-link>
         <router-link to="/meus-agendamentos" class="btn btn-ghost">Meus agendamentos</router-link>
         <button class="btn btn-ghost" @click="sair">Sair</button>
       </div>
