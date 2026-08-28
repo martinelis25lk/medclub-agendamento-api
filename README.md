@@ -30,6 +30,7 @@ docker-compose up -d --build
 3. Rode as migrações e crie o usuário administrador:
 
 docker exec -it medclub_web python manage.py migrate
+
 docker exec -it medclub_web python manage.py createsuperuser
 
 > ATENÇÃO O `createsuperuser` cria um usuário com acesso ao Django Admin, mas **não** define automaticamente o papel de negócio `interno`. Após criar, ajuste manualmente:
