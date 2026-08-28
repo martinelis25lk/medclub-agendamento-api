@@ -4,6 +4,7 @@ import RegisterView from '../views/RegisterView.vue'
 import EspecialistasView from '../views/EspecialistasView.vue'
 import HorariosView from '../views/HorariosView.vue'
 import ConfirmacaoView from '../views/ConfirmacaoView.vue'
+import MeusAgendamentosView from '../views/MeusAgendamentosView.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -14,6 +15,7 @@ const router = createRouter({
     { path: '/especialistas', component: EspecialistasView, meta: { requiresAuth: true } },
     { path: '/especialistas/:id/horarios', component: HorariosView, meta: { requiresAuth: true }, props: true },
     { path: '/confirmacao/:id', component: ConfirmacaoView, meta: { requiresAuth: true }, props: true },
+    { path: '/meus-agendamentos', component: MeusAgendamentosView, meta: { requiresAuth: true } },
   ],
 })
 

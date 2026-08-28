@@ -16,7 +16,10 @@ function sair() {
       <strong style="font-family: var(--font-display); font-size: 1.25rem; color: var(--color-primary);">
         medclub<span style="color: var(--color-accent);">.</span>
       </strong>
-      <button v-if="isLoggedIn" class="btn btn-ghost" @click="sair">Sair</button>
+      <div v-if="isLoggedIn" style="display:flex; gap:0.75rem; align-items:center;">
+        <router-link to="/meus-agendamentos" class="btn btn-ghost">Meus agendamentos</router-link>
+        <button class="btn btn-ghost" @click="sair">Sair</button>
+      </div>
     </div>
   </header>
   <router-view />
